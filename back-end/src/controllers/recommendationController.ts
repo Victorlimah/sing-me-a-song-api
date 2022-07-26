@@ -9,6 +9,8 @@ async function insert(req: Request, res: Response) {
     throw wrongSchemaError();
   }
 
+  console.log(req.body);
+
   await recommendationService.insert(req.body);
 
   res.sendStatus(201);
