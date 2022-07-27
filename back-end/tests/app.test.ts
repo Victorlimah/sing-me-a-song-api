@@ -10,6 +10,7 @@ beforeEach(async () => {
   await scenario.deleteAllData();
 })
 
+//TODO: Create a scenario with 4 recommendations
 const agent = supertest.agent(app);
 
 describe("🌱 ~ POST /recommendations", () => {
@@ -102,6 +103,22 @@ describe("🌱 ~ GET /recommendations", () => {
 
     expect(response.body[1].name).toBe(recommendation2.name);
     expect(response.body[1].youtubeLink).toBe(recommendation2.youtubeLink);
+  });
+
+  it("✨ 200 ~ Get recommendation by id", async () => {
+    const body = recommendationFactory();
+
+    await agent.post("/recommendations").send(body);
+    
+    const recommendation = await prisma.recommendation.findFirst({
+      where: { name: body.name, youtubeLink: body.youtubeLink },
+    });
+
+    const response = await agent.get(`/recommendations/${recommendation.id}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe(recommendation.name);
+    expect(response.body.youtubeLink).toBe(recommendation.youtubeLink);
   });
 });
 
