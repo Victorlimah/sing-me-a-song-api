@@ -67,4 +67,28 @@ describe("🌱 ~ GET /recommendations", () => {
     expect(response.status).toBe(200);
     expect(response.body).toHaveLength(0);
   });
+
+  it("✨ 200 ~ Get top recommendations", async () => {
+    const recommendation1 = recommendationFactory();
+    const recommendation2 = recommendationFactory();
+    const recommendation3 = recommendationFactory();
+
+    const { body } = await agent.post("/recommendations").send(recommendation1);
+    await agent.post("/recommendations").send(recommendation2);
+    await agent.post("/recommendations").send(recommendation3);
+
+    await agent.post(`/recommendations/${body.id}/upvote`);
+
+    const response = await agent.get("/recommendations/top/2");
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveLength(2);
+
+    expect(response.body[0].name).toBe(recommendation1.name);
+    expect(response.body[0].youtubeLink).toBe(recommendation1.youtubeLink);
+
+    expect(response.body[1].name).toBe(recommendation2.name);
+    expect(response.body[1].youtubeLink).toBe(recommendation2.youtubeLink);
+  });
 });
+
