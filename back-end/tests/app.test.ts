@@ -68,6 +68,19 @@ describe("🌱 ~ GET /recommendations", () => {
     expect(response.body).toHaveLength(0);
   });
 
+  it("✨ 200 ~ Get random recommendation", async () => {
+    const recommendation1 = recommendationFactory();
+    const recommendation2 = recommendationFactory();
+
+    await agent.post("/recommendations").send(recommendation1);
+    await agent.post("/recommendations").send(recommendation2);
+
+    const response = await agent.get("/recommendations/random");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("name");
+    expect(`${recommendation1.name} ${recommendation2.name}`).toContain(response.body.name);
+  });
+
   it("✨ 200 ~ Get top recommendations", async () => {
     const recommendation1 = recommendationFactory();
     const recommendation2 = recommendationFactory();
