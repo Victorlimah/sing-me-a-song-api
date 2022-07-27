@@ -37,4 +37,9 @@ describe("POST /recommendations", () => {
     expect(conflict.status).toBe(409);
   });
 
+  it("✨ 422 ~ Create a new recommendation with a invalid data", async () => {
+    const response = await agent.post("/recommendations").send({});
+    expect(response.status).toBe(422);
+  });
+
 });
