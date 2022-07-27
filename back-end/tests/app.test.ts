@@ -2,7 +2,7 @@ import supertest from "supertest";
 
 import app from "../src/app.js";
 import * as scenario from "./factories/scenarioFactory.js";
-import recommendationFactory from "./factories/recommendationFactory.js";
+import { recommendationFactory } from "./factories/recommendationFactory.js";
 
 import { prisma } from "../src/database.js";
 
@@ -12,23 +12,29 @@ beforeEach(async () => {
 
 const agent = supertest.agent(app);
 
-describe("Recommendation", () => {
-  it("POST /recommendation 201", async () => {
-    const body = await recommendationFactory();
+describe("POST /recommendations", () => {
+  it("✨ 201 ~ Create a new recommendation", async () => {
+    const body = recommendationFactory();
 
     const response = await agent.post("/recommendations").send(body);
-    console.log(response);
     expect(response.status).toBe(201);
-
 
     const { name, youtubeLink } = body;
     const checkUser = await prisma.recommendation.findFirst({
-      where: { name, youtubeLink }
+      where: { name, youtubeLink },
     });
 
     expect(checkUser).not.toBeNull();
   });
 
+  it("✨ 409 ~ Create a new recommendation with a conflict", async () => {
+    const body = recommendationFactory();
 
+    const create = await agent.post("/recommendations").send(body);
+    expect(create.status).toBe(201);
+
+    const conflict = await agent.post("/recommendations").send(body);
+    expect(conflict.status).toBe(409);
+  });
 
 });
