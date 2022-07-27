@@ -12,7 +12,7 @@ beforeEach(async () => {
 
 const agent = supertest.agent(app);
 
-describe("POST /recommendations", () => {
+describe("🌱 ~ POST /recommendations", () => {
   it("✨ 201 ~ Create a new recommendation", async () => {
     const body = recommendationFactory();
 
@@ -41,5 +41,24 @@ describe("POST /recommendations", () => {
     const response = await agent.post("/recommendations").send({});
     expect(response.status).toBe(422);
   });
+});
 
+describe("🌱 ~ GET /recommendations", () => {
+  it("✨ 200 ~ Get all recommendations", async () => {
+    const recommendation1 = recommendationFactory();
+    const recommendation2 = recommendationFactory();
+    
+    await agent.post("/recommendations").send(recommendation1);
+    await agent.post("/recommendations").send(recommendation2);
+
+    const response = await agent.get("/recommendations");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveLength(2);
+
+    expect(response.body[0].name).toBe(recommendation2.name);
+    expect(response.body[0].youtubeLink).toBe(recommendation2.youtubeLink);
+
+    expect(response.body[1].name).toBe(recommendation1.name);
+    expect(response.body[1].youtubeLink).toBe(recommendation1.youtubeLink);
+  });
 });
