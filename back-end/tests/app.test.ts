@@ -61,4 +61,10 @@ describe("🌱 ~ GET /recommendations", () => {
     expect(response.body[1].name).toBe(recommendation1.name);
     expect(response.body[1].youtubeLink).toBe(recommendation1.youtubeLink);
   });
+
+  it("✨ 200 ~ Get empty recommendations", async () => {
+    const response = await agent.get("/recommendations");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveLength(0);
+  });
 });
