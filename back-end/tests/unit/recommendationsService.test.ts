@@ -57,7 +57,7 @@ describe("recommendationService test suite", () => {
       
       await recommendationService.upvote(1);
       expect(recommendationRepository.find).toHaveBeenCalledWith(1);
-      expect(recommendationRepository.updateScore).toHaveBeenCalledTimes(1);        
+      expect(recommendationRepository.updateScore).toHaveBeenLastCalledWith(1, "increment"); 
     });
 
     it("Fail in upvote", async () => {
@@ -69,6 +69,23 @@ describe("recommendationService test suite", () => {
         { message: "", type: "not_found" }
       );
     });
+  });
+
+  describe("downvotes tests suites", () => {
+    it("Sucess in downvote", async () => {
+      jest
+        .spyOn(recommendationRepository, "find")
+        .mockResolvedValueOnce(recommendationFactory);
+  
+      jest
+        .spyOn(recommendationRepository, "updateScore")
+        .mockResolvedValueOnce(recommendationFactory);
+      
+      await recommendationService.downvote(1);
+      expect(recommendationRepository.find).toHaveBeenCalledWith(1);
+      expect(recommendationRepository.updateScore).toHaveBeenLastCalledWith(1, "decrement");   
+    });
+  
   });
 
 });
