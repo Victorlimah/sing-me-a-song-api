@@ -59,6 +59,16 @@ describe("recommendationService test suite", () => {
       expect(recommendationRepository.find).toHaveBeenCalledWith(1);
       expect(recommendationRepository.updateScore).toHaveBeenCalledTimes(1);        
     });
+
+    it("Fail in upvote", async () => {
+      jest
+        .spyOn(recommendationRepository, "find")
+        .mockResolvedValueOnce(null);
+  
+      expect(recommendationService.upvote(1)).rejects.toEqual(
+        { message: "", type: "not_found" }
+      );
+    });
   });
 
 });
