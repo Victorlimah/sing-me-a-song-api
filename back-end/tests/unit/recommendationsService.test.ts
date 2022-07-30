@@ -23,6 +23,23 @@ describe("recommendationService test suite", () => {
       expect(recommendationRepository.create).toHaveBeenCalledTimes(1);
     });
 
+    it("Fail in create recommendation", async () => {
+      const id = 1;
+      const name = "Test";
+      const youtubeLink = "https://www.youtube.com/watch";
+      const score = 10;
+
+      const recommendation = { id, name, youtubeLink, score };
+
+      jest
+        .spyOn(recommendationRepository, "findByName")
+        .mockResolvedValueOnce(recommendation);
+
+      expect(recommendationService.insert({name, youtubeLink})).rejects.toEqual(
+        { message: "Recommendations names must be unique", type: "conflict" }
+      );
+    });
+
   });
 
 });
