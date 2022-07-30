@@ -104,6 +104,16 @@ describe("recommendationService test suite", () => {
       expect(recommendationRepository.updateScore).toHaveBeenLastCalledWith(1, "decrement");
       expect(recommendationRepository.remove).toHaveBeenCalledTimes(1);
     });
+
+    it("Fail in downvote", async () => {
+      jest
+        .spyOn(recommendationRepository, "find")
+        .mockResolvedValueOnce(null);
+  
+      expect(recommendationService.downvote(1)).rejects.toEqual(
+        { message: "", type: "not_found" }
+      );
+    });
   
   });
 
