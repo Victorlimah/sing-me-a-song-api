@@ -148,6 +148,16 @@ describe("recommendationService test suite", () => {
       expect(recommendationRepository.findAll).toHaveBeenCalledTimes(1);
       expect(searched).toEqual([recommendationFactory]);
     });
+
+    it("Sucess in getTop", async () => {
+      jest
+        .spyOn(recommendationRepository, "getAmountByScore")
+        .mockResolvedValueOnce([recommendationFactory]);
+
+      const searched = await recommendationService.getTop(1);
+      expect(recommendationRepository.getAmountByScore).toHaveBeenCalledWith(1);
+      expect(searched).toEqual([recommendationFactory]);
+    });
   });
 
 });
