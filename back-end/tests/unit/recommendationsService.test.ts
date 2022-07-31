@@ -117,7 +117,7 @@ describe("recommendationService test suite", () => {
     });
   });
 
-  describe("getById tests suites", () => {
+  describe("Get tests suites", () => {
     it("Sucess in getByIdOrFail", async () => {
       jest
         .spyOn(recommendationRepository, "find")
@@ -137,6 +137,16 @@ describe("recommendationService test suite", () => {
         message: "",
         type: "not_found",
       });
+    });
+
+    it("Sucess in get", async () => {
+      jest
+        .spyOn(recommendationRepository, "findAll")
+        .mockResolvedValueOnce([recommendationFactory]);
+
+      const searched = await recommendationService.get();
+      expect(recommendationRepository.findAll).toHaveBeenCalledTimes(1);
+      expect(searched).toEqual([recommendationFactory]);
     });
   });
 
