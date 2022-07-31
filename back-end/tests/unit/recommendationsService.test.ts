@@ -127,6 +127,17 @@ describe("recommendationService test suite", () => {
       expect(recommendationRepository.find).toHaveBeenCalledWith(1);
       expect(searched).toEqual(recommendationFactory);
     });
+
+    it("Fail in getById", async () => {
+      jest
+        .spyOn(recommendationRepository, "find")
+        .mockResolvedValueOnce(null);
+
+      expect(recommendationService.getById(1)).rejects.toEqual({
+        message: "",
+        type: "not_found",
+      });
+    });
   });
 
 });
