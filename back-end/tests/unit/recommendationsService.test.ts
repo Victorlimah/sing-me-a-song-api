@@ -5,6 +5,7 @@ import { recommendationRepository } from "../../src/repositories/recommendationR
 
 describe("recommendationService test suite", () => {
 
+  //TODO: Create a factory to create a recommendation
   const recommendationNameAndLink = {
     name: "Test recommendation",
     youtubeLink: "https://www.youtube.com/watch"
@@ -114,7 +115,18 @@ describe("recommendationService test suite", () => {
         { message: "", type: "not_found" }
       );
     });
-  
+  });
+
+  describe("getById tests suites", () => {
+    it("Sucess in getByIdOrFail", async () => {
+      jest
+        .spyOn(recommendationRepository, "find")
+        .mockResolvedValueOnce(recommendationFactory);
+
+      const searched = await recommendationService.getById(1);
+      expect(recommendationRepository.find).toHaveBeenCalledWith(1);
+      expect(searched).toEqual(recommendationFactory);
+    });
   });
 
 });
