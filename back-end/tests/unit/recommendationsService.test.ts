@@ -4,19 +4,17 @@ import { recommendationService } from "../../src/services/recommendationsService
 import { recommendationRepository } from "../../src/repositories/recommendationRepository.js";
 
 describe("recommendationService test suite", () => {
-
-  //TODO: Create a factory to create a recommendation
   const recommendationNameAndLink = {
     name: "Test recommendation",
-    youtubeLink: "https://www.youtube.com/watch"
-  }
+    youtubeLink: "https://www.youtube.com/watch",
+  };
 
   const recommendationFactory = {
     id: 1,
     name: "Test recommendation",
     youtubeLink: "https://www.youtube.com/watch",
-    score: 2
-  }
+    score: 2,
+  };
 
   describe("Create recommendation tests suites", () => {
     it("Sucess in create recommendation", async () => {
@@ -40,9 +38,12 @@ describe("recommendationService test suite", () => {
         .spyOn(recommendationRepository, "findByName")
         .mockResolvedValueOnce(recommendationFactory);
 
-      expect(recommendationService.insert(recommendationNameAndLink)).rejects.toEqual(
-        { message: "Recommendations names must be unique", type: "conflict" }
-      );
+      expect(
+        recommendationService.insert(recommendationNameAndLink)
+      ).rejects.toEqual({
+        message: "Recommendations names must be unique",
+        type: "conflict",
+      });
     });
   });
 
@@ -51,24 +52,26 @@ describe("recommendationService test suite", () => {
       jest
         .spyOn(recommendationRepository, "find")
         .mockResolvedValueOnce(recommendationFactory);
-  
+
       jest
         .spyOn(recommendationRepository, "updateScore")
         .mockResolvedValueOnce(recommendationFactory);
-      
+
       await recommendationService.upvote(1);
       expect(recommendationRepository.find).toHaveBeenCalledWith(1);
-      expect(recommendationRepository.updateScore).toHaveBeenLastCalledWith(1, "increment"); 
+      expect(recommendationRepository.updateScore).toHaveBeenLastCalledWith(
+        1,
+        "increment"
+      );
     });
 
     it("Fail in upvote", async () => {
-      jest
-        .spyOn(recommendationRepository, "find")
-        .mockResolvedValueOnce(null);
-  
-      expect(recommendationService.upvote(1)).rejects.toEqual(
-        { message: "", type: "not_found" }
-      );
+      jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(null);
+
+      expect(recommendationService.upvote(1)).rejects.toEqual({
+        message: "",
+        type: "not_found",
+      });
     });
   });
 
@@ -77,21 +80,24 @@ describe("recommendationService test suite", () => {
       jest
         .spyOn(recommendationRepository, "find")
         .mockResolvedValueOnce(recommendationFactory);
-  
+
       jest
         .spyOn(recommendationRepository, "updateScore")
         .mockResolvedValueOnce(recommendationFactory);
-      
+
       await recommendationService.downvote(1);
       expect(recommendationRepository.find).toHaveBeenCalledWith(1);
-      expect(recommendationRepository.updateScore).toHaveBeenLastCalledWith(1, "decrement");   
+      expect(recommendationRepository.updateScore).toHaveBeenLastCalledWith(
+        1,
+        "decrement"
+      );
     });
 
     it("Downvote with delete recommendation", async () => {
       jest
         .spyOn(recommendationRepository, "find")
         .mockResolvedValueOnce(recommendationFactory);
-  
+
       jest
         .spyOn(recommendationRepository, "updateScore")
         .mockResolvedValueOnce({ ...recommendationFactory, score: -6 });
@@ -99,21 +105,23 @@ describe("recommendationService test suite", () => {
       jest
         .spyOn(recommendationRepository, "remove")
         .mockResolvedValueOnce(null);
-      
+
       await recommendationService.downvote(1);
       expect(recommendationRepository.find).toHaveBeenCalledWith(1);
-      expect(recommendationRepository.updateScore).toHaveBeenLastCalledWith(1, "decrement");
+      expect(recommendationRepository.updateScore).toHaveBeenLastCalledWith(
+        1,
+        "decrement"
+      );
       expect(recommendationRepository.remove).toHaveBeenCalledTimes(1);
     });
 
     it("Fail in downvote", async () => {
-      jest
-        .spyOn(recommendationRepository, "find")
-        .mockResolvedValueOnce(null);
-  
-      expect(recommendationService.downvote(1)).rejects.toEqual(
-        { message: "", type: "not_found" }
-      );
+      jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(null);
+
+      expect(recommendationService.downvote(1)).rejects.toEqual({
+        message: "",
+        type: "not_found",
+      });
     });
   });
 
@@ -129,9 +137,7 @@ describe("recommendationService test suite", () => {
     });
 
     it("Fail in getById", async () => {
-      jest
-        .spyOn(recommendationRepository, "find")
-        .mockResolvedValueOnce(null);
+      jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(null);
 
       expect(recommendationService.getById(1)).rejects.toEqual({
         message: "",
@@ -190,17 +196,14 @@ describe("recommendationService test suite", () => {
     });
 
     it("error notfound in get random", async () => {
-      jest.spyOn(Math, "random").mockReturnValueOnce(0.5);
-
       jest
         .spyOn(recommendationRepository, "findAll")
-        .mockResolvedValueOnce([]);
+        .mockResolvedValue([] as any);
 
-      expect(recommendationService.getRandom()).rejects.toEqual({
-        message: "",
-        type: "not_found",
-      });
+      const result = recommendationService.getRandom();
+
+      expect(result).rejects.toHaveProperty("type", "not_found");
+      expect(recommendationRepository.findAll).toBeCalled();
     });
   });
-
 });
