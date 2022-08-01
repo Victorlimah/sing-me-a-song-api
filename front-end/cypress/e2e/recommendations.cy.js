@@ -122,5 +122,32 @@ describe("Recommendations test suite", () => {
         });
       });
     });
+
+    it("should remove a song recommendation with -5 votes", () => {
+      const score = -5;
+
+      cy.addLowScoreSong(score);
+
+      cy.visit("http://localhost:3000");
+      cy.intercept("POST", `/recommendations/1/downvote`).as("buttonClick")
+
+      cy.get("article>div:nth-child(3)").then((div) => {
+        cy.get(".vote-down-arrow").click();
+
+        cy.wait("@buttonClick").then(({ response }) => {
+          expect(response.statusCode).to.equal(200);
+
+          cy.intercept("GET", "/recommendations").as("getRecommendations");
+          cy.visit("http://localhost:3000");
+          cy.wait("@getRecommendations");
+
+          cy.wait(1000).then(() => {
+            cy.get("article>div:nth-child(3)").should("not.exist");
+          });
+        });
+      });
+      
+
+    });
   });
 });
