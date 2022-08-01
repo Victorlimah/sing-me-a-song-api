@@ -188,6 +188,20 @@ describe("recommendationService test suite", () => {
         scoreFilter: "lte",
       });
     });
+
+    it("error notfound in get random", async () => {
+      jest.spyOn(Math, "random").mockReturnValueOnce(0.5);
+
+      jest
+        .spyOn(recommendationRepository, "findAll")
+        .mockResolvedValueOnce([]);
+
+      expect(recommendationService.getRandom()).rejects.toEqual({
+        message: "",
+        type: "not_found",
+      });
+    });
+
   });
 
 });
