@@ -58,7 +58,7 @@ describe("Recommendations test suite", () => {
       const song = {
         name: "Diego Pinho - Caractere mais frequente",
         youtubeLink: "https://youtu.be/q08oqgoSTSo",
-      }
+      };
 
       cy.addSong(song);
 
@@ -67,7 +67,7 @@ describe("Recommendations test suite", () => {
       cy.wait("@getRecommendations");
 
       cy.intercept("POST", `/recommendations/1/upvote`).as("buttonClick");
-        cy.get("article>div:nth-child(3)").then((div) => {
+      cy.get("article>div:nth-child(3)").then((div) => {
         const voteCountBefore = Number(div.text());
         cy.log("Votes before: " + voteCountBefore);
         cy.get(".vote-up-arrow").click();
@@ -86,14 +86,13 @@ describe("Recommendations test suite", () => {
           });
         });
       });
-
-    }); 
+    });
 
     it("should downvote for a song recommendation", () => {
       const song = {
         name: "Diego Pinho - Caractere mais frequente",
         youtubeLink: "https://youtu.be/q08oqgoSTSo",
-      }
+      };
 
       cy.addSong(song);
 
@@ -102,7 +101,7 @@ describe("Recommendations test suite", () => {
       cy.wait("@getRecommendations");
 
       cy.intercept("POST", `/recommendations/1/downvote`).as("buttonClick");
-        cy.get("article>div:nth-child(3)").then((div) => {
+      cy.get("article>div:nth-child(3)").then((div) => {
         const voteCountBefore = Number(div.text());
         cy.get(".vote-down-arrow").click();
 
@@ -127,7 +126,7 @@ describe("Recommendations test suite", () => {
       cy.addLowScoreSong(score);
 
       cy.visit("http://localhost:3000");
-      cy.intercept("POST", `/recommendations/1/downvote`).as("buttonClick")
+      cy.intercept("POST", `/recommendations/1/downvote`).as("buttonClick");
 
       cy.get("article>div:nth-child(3)").then((div) => {
         cy.get(".vote-down-arrow").click();
@@ -144,8 +143,6 @@ describe("Recommendations test suite", () => {
           });
         });
       });
-      
-
     });
   });
 
