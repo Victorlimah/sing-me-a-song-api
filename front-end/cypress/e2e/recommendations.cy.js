@@ -88,5 +88,39 @@ describe("Recommendations test suite", () => {
       });
 
     }); 
+
+    it("should downvote for a song recommendation", () => {
+      const song = {
+        name: "Diego Pinho - Caractere mais frequente",
+        youtubeLink: "https://youtu.be/q08oqgoSTSo",
+      }
+
+      cy.addSong(song);
+
+      cy.intercept("GET", "/recommendations").as("getRecommendations");
+      cy.visit("http://localhost:3000");
+      cy.wait("@getRecommendations");
+
+      cy.intercept("POST", `/recommendations/1/downvote`).as("buttonClick");
+        cy.get("article>div:nth-child(3)").then((div) => {
+        const voteCountBefore = Number(div.text());
+        cy.log("Votes before: " + voteCountBefore);
+        cy.get(".vote-down-arrow").click();
+
+        cy.wait("@buttonClick").then(({ response }) => {
+          expect(response.statusCode).to.equal(200);
+
+          cy.intercept("GET", "/recommendations").as("getRecommendations");
+          cy.visit("http://localhost:3000");
+          cy.wait("@getRecommendations");
+
+          cy.get("article>div:nth-child(3)").then((div) => {
+            const voteCountAfter = Number(div.text());
+            cy.log("Votes after: " + voteCountAfter);
+            expect(voteCountAfter).to.equal(voteCountBefore - 1);
+          });
+        });
+      });
+    });
   });
 });
