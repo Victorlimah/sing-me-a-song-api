@@ -6,46 +6,50 @@ beforeEach(() => {
 });
 
 describe("Recommendations test suite", () => {
-  it("should add a song recommendation", () => {
-    cy.visit("http://localhost:3000/");
+  describe("Create a song recommendation", () => {
+    it("should add a song recommendation", () => {
+      cy.visit("http://localhost:3000/");
 
-    cy.get("input[placeholder='Name']").type(
-      "Diego Pinho - Caractere mais frequente"
-    );
-    cy.get("input[placeholder='https://youtu.be/...']").type(
-      "https://youtu.be/q08oqgoSTSo"
-    );
+      cy.get("input[placeholder='Name']").type(
+        "Diego Pinho - Caractere mais frequente"
+      );
+      cy.get("input[placeholder='https://youtu.be/...']").type(
+        "https://youtu.be/q08oqgoSTSo"
+      );
 
-    cy.intercept("POST", "http://localhost:5000/recommendations").as(
-      "createRecommendation"
-    );
-    cy.get("button").click();
+      cy.intercept("POST", "http://localhost:5000/recommendations").as(
+        "createRecommendation"
+      );
+      cy.get("button").click();
 
-    cy.wait("@createRecommendation").then((res) => {
-      expect(res.response.statusCode).to.equals(201);
+      cy.wait("@createRecommendation").then((res) => {
+        expect(res.response.statusCode).to.equals(201);
+      });
     });
-  });
 
-  it("should not create a duplicated song recommendation", () => {
-    const song = {
-      name: "Diego Pinho - Caractere mais frequente",
-      youtubeLink: "https://youtu.be/q08oqgoSTSo",
-    };
+    it("should not create a duplicated song recommendation", () => {
+      const song = {
+        name: "Diego Pinho - Caractere mais frequente",
+        youtubeLink: "https://youtu.be/q08oqgoSTSo",
+      };
 
-    cy.addSong(song);
+      cy.addSong(song);
 
-    cy.visit("http://localhost:3000");
+      cy.visit("http://localhost:3000");
 
-    cy.get("input[placeholder='Name']").type(song.name);
-    cy.get("input[placeholder='https://youtu.be/...']").type(song.youtubeLink);
+      cy.get("input[placeholder='Name']").type(song.name);
+      cy.get("input[placeholder='https://youtu.be/...']").type(
+        song.youtubeLink
+      );
 
-    cy.intercept("POST", "http://localhost:5000/recommendations").as(
-      "createRecommendation"
-    );
-    cy.get("button").click();
+      cy.intercept("POST", "http://localhost:5000/recommendations").as(
+        "createRecommendation"
+      );
+      cy.get("button").click();
 
-    cy.wait("@createRecommendation").then((res) => {
-      expect(res.response.statusCode).to.equals(409);
+      cy.wait("@createRecommendation").then((res) => {
+        expect(res.response.statusCode).to.equals(409);
+      });
     });
   });
 });
