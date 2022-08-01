@@ -30,3 +30,9 @@ Cypress.Commands.add("clearDatabase", () => {
     cy.log(res)
   );
 });
+
+Cypress.Commands.add("addSong", (songData) => {
+  cy.request("POST", "http://localhost:5000/recommendations", songData).then(
+    (res) => cy.log(res)
+  );
+});
