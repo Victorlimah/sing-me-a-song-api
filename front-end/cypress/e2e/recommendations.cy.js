@@ -14,5 +14,4 @@ describe("Recommendations test suite", () => {
     cy.wait("@createRecommendation");
     
   });
-
 });
