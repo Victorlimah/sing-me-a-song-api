@@ -6,148 +6,148 @@ beforeEach(() => {
 });
 
 describe("Recommendations test suite", () => {
-  // describe("Create a song recommendation", () => {
-  //   it("should add a song recommendation", () => {
-  //     cy.visit("http://localhost:3000/");
+  describe("Create a song recommendation", () => {
+    it("should add a song recommendation", () => {
+      cy.visit("http://localhost:3000/");
 
-  //     cy.get("input[placeholder='Name']").type(
-  //       "Diego Pinho - Caractere mais frequente"
-  //     );
-  //     cy.get("input[placeholder='https://youtu.be/...']").type(
-  //       "https://youtu.be/q08oqgoSTSo"
-  //     );
+      cy.get("input[placeholder='Name']").type(
+        "Diego Pinho - Caractere mais frequente"
+      );
+      cy.get("input[placeholder='https://youtu.be/...']").type(
+        "https://youtu.be/q08oqgoSTSo"
+      );
 
-  //     cy.intercept("POST", "http://localhost:5000/recommendations").as(
-  //       "createRecommendation"
-  //     );
-  //     cy.get("button").click();
+      cy.intercept("POST", "http://localhost:5000/recommendations").as(
+        "createRecommendation"
+      );
+      cy.get("button").click();
 
-  //     cy.wait("@createRecommendation").then((res) => {
-  //       expect(res.response.statusCode).to.equals(201);
-  //     });
-  //   });
+      cy.wait("@createRecommendation").then((res) => {
+        expect(res.response.statusCode).to.equals(201);
+      });
+    });
 
-  //   it("should not create a duplicated song recommendation", () => {
-  //     const song = {
-  //       name: "Diego Pinho - Caractere mais frequente",
-  //       youtubeLink: "https://youtu.be/q08oqgoSTSo",
-  //     };
+    it("should not create a duplicated song recommendation", () => {
+      const song = {
+        name: "Diego Pinho - Caractere mais frequente",
+        youtubeLink: "https://youtu.be/q08oqgoSTSo",
+      };
 
-  //     cy.addSong(song);
+      cy.addSong(song);
 
-  //     cy.visit("http://localhost:3000");
+      cy.visit("http://localhost:3000");
 
-  //     cy.get("input[placeholder='Name']").type(song.name);
-  //     cy.get("input[placeholder='https://youtu.be/...']").type(
-  //       song.youtubeLink
-  //     );
+      cy.get("input[placeholder='Name']").type(song.name);
+      cy.get("input[placeholder='https://youtu.be/...']").type(
+        song.youtubeLink
+      );
 
-  //     cy.intercept("POST", "http://localhost:5000/recommendations").as(
-  //       "createRecommendation"
-  //     );
-  //     cy.get("button").click();
+      cy.intercept("POST", "http://localhost:5000/recommendations").as(
+        "createRecommendation"
+      );
+      cy.get("button").click();
 
-  //     cy.wait("@createRecommendation").then((res) => {
-  //       expect(res.response.statusCode).to.equals(409);
-  //     });
-  //   });
-  // });
+      cy.wait("@createRecommendation").then((res) => {
+        expect(res.response.statusCode).to.equals(409);
+      });
+    });
+  });
 
-  // describe("Vote for a song recommendation", () => {
-  //   it("should upvote for a song recommendation", () => {
-  //     const song = {
-  //       name: "Diego Pinho - Caractere mais frequente",
-  //       youtubeLink: "https://youtu.be/q08oqgoSTSo",
-  //     }
+  describe("Vote for a song recommendation", () => {
+    it("should upvote for a song recommendation", () => {
+      const song = {
+        name: "Diego Pinho - Caractere mais frequente",
+        youtubeLink: "https://youtu.be/q08oqgoSTSo",
+      }
 
-  //     cy.addSong(song);
+      cy.addSong(song);
 
-  //     cy.intercept("GET", "/recommendations").as("getRecommendations");
-  //     cy.visit("http://localhost:3000");
-  //     cy.wait("@getRecommendations");
+      cy.intercept("GET", "/recommendations").as("getRecommendations");
+      cy.visit("http://localhost:3000");
+      cy.wait("@getRecommendations");
 
-  //     cy.intercept("POST", `/recommendations/1/upvote`).as("buttonClick");
-  //       cy.get("article>div:nth-child(3)").then((div) => {
-  //       const voteCountBefore = Number(div.text());
-  //       cy.log("Votes before: " + voteCountBefore);
-  //       cy.get(".vote-up-arrow").click();
+      cy.intercept("POST", `/recommendations/1/upvote`).as("buttonClick");
+        cy.get("article>div:nth-child(3)").then((div) => {
+        const voteCountBefore = Number(div.text());
+        cy.log("Votes before: " + voteCountBefore);
+        cy.get(".vote-up-arrow").click();
 
-  //       cy.wait("@buttonClick").then(({ response }) => {
-  //         expect(response.statusCode).to.equal(200);
+        cy.wait("@buttonClick").then(({ response }) => {
+          expect(response.statusCode).to.equal(200);
 
-  //         cy.intercept("GET", "/recommendations").as("getRecommendations");
-  //         cy.visit("http://localhost:3000");
-  //         cy.wait("@getRecommendations");
+          cy.intercept("GET", "/recommendations").as("getRecommendations");
+          cy.visit("http://localhost:3000");
+          cy.wait("@getRecommendations");
 
-  //         cy.get("article>div:nth-child(3)").then((div) => {
-  //           const voteCountAfter = Number(div.text());
-  //           cy.log("Votes after: " + voteCountAfter);
-  //           expect(voteCountAfter).to.equal(voteCountBefore + 1);
-  //         });
-  //       });
-  //     });
+          cy.get("article>div:nth-child(3)").then((div) => {
+            const voteCountAfter = Number(div.text());
+            cy.log("Votes after: " + voteCountAfter);
+            expect(voteCountAfter).to.equal(voteCountBefore + 1);
+          });
+        });
+      });
 
-  //   }); 
+    }); 
 
-  //   it("should downvote for a song recommendation", () => {
-  //     const song = {
-  //       name: "Diego Pinho - Caractere mais frequente",
-  //       youtubeLink: "https://youtu.be/q08oqgoSTSo",
-  //     }
+    it("should downvote for a song recommendation", () => {
+      const song = {
+        name: "Diego Pinho - Caractere mais frequente",
+        youtubeLink: "https://youtu.be/q08oqgoSTSo",
+      }
 
-  //     cy.addSong(song);
+      cy.addSong(song);
 
-  //     cy.intercept("GET", "/recommendations").as("getRecommendations");
-  //     cy.visit("http://localhost:3000");
-  //     cy.wait("@getRecommendations");
+      cy.intercept("GET", "/recommendations").as("getRecommendations");
+      cy.visit("http://localhost:3000");
+      cy.wait("@getRecommendations");
 
-  //     cy.intercept("POST", `/recommendations/1/downvote`).as("buttonClick");
-  //       cy.get("article>div:nth-child(3)").then((div) => {
-  //       const voteCountBefore = Number(div.text());
-  //       cy.get(".vote-down-arrow").click();
+      cy.intercept("POST", `/recommendations/1/downvote`).as("buttonClick");
+        cy.get("article>div:nth-child(3)").then((div) => {
+        const voteCountBefore = Number(div.text());
+        cy.get(".vote-down-arrow").click();
 
-  //       cy.wait("@buttonClick").then(({ response }) => {
-  //         expect(response.statusCode).to.equal(200);
+        cy.wait("@buttonClick").then(({ response }) => {
+          expect(response.statusCode).to.equal(200);
 
-  //         cy.intercept("GET", "/recommendations").as("getRecommendations");
-  //         cy.visit("http://localhost:3000");
-  //         cy.wait("@getRecommendations");
+          cy.intercept("GET", "/recommendations").as("getRecommendations");
+          cy.visit("http://localhost:3000");
+          cy.wait("@getRecommendations");
 
-  //         cy.get("article>div:nth-child(3)").then((div) => {
-  //           const voteCountAfter = Number(div.text());
-  //           expect(voteCountAfter).to.equal(voteCountBefore - 1);
-  //         });
-  //       });
-  //     });
-  //   });
+          cy.get("article>div:nth-child(3)").then((div) => {
+            const voteCountAfter = Number(div.text());
+            expect(voteCountAfter).to.equal(voteCountBefore - 1);
+          });
+        });
+      });
+    });
 
-  //   it("should remove a song recommendation with -5 votes", () => {
-  //     const score = -5;
+    it("should remove a song recommendation with -5 votes", () => {
+      const score = -5;
 
-  //     cy.addLowScoreSong(score);
+      cy.addLowScoreSong(score);
 
-  //     cy.visit("http://localhost:3000");
-  //     cy.intercept("POST", `/recommendations/1/downvote`).as("buttonClick")
+      cy.visit("http://localhost:3000");
+      cy.intercept("POST", `/recommendations/1/downvote`).as("buttonClick")
 
-  //     cy.get("article>div:nth-child(3)").then((div) => {
-  //       cy.get(".vote-down-arrow").click();
+      cy.get("article>div:nth-child(3)").then((div) => {
+        cy.get(".vote-down-arrow").click();
 
-  //       cy.wait("@buttonClick").then(({ response }) => {
-  //         expect(response.statusCode).to.equal(200);
+        cy.wait("@buttonClick").then(({ response }) => {
+          expect(response.statusCode).to.equal(200);
 
-  //         cy.intercept("GET", "/recommendations").as("getRecommendations");
-  //         cy.visit("http://localhost:3000");
-  //         cy.wait("@getRecommendations");
+          cy.intercept("GET", "/recommendations").as("getRecommendations");
+          cy.visit("http://localhost:3000");
+          cy.wait("@getRecommendations");
 
-  //         cy.wait(1000).then(() => {
-  //           cy.get("article>div:nth-child(3)").should("not.exist");
-  //         });
-  //       });
-  //     });
+          cy.wait(1000).then(() => {
+            cy.get("article>div:nth-child(3)").should("not.exist");
+          });
+        });
+      });
       
 
-  //   });
-  // });
+    });
+  });
 
   describe("Random screen test suit", () => {
     it("should load ten tests", () => {
