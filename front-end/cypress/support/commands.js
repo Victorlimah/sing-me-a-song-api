@@ -43,3 +43,10 @@ Cypress.Commands.add("addLowScoreSong", (score) => {
     `http://localhost:5000/tests/seed-lowScoreSong?score=${score}`
   ).then((res) => cy.log(res));
 });
+
+Cypress.Commands.add("seedDatabase", (amount, highScorePercentage) => {
+  cy.request(
+    "POST",
+    `http://localhost:5000/tests/seed-database?amount=${amount}&highScorePercentage=${highScorePercentage}`
+  ).then((res) => cy.log(res));
+});
