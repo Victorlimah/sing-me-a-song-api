@@ -201,7 +201,6 @@ describe("recommendationService test suite", () => {
         type: "not_found",
       });
     });
-
   });
 
 });
