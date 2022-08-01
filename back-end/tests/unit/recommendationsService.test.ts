@@ -174,6 +174,20 @@ describe("recommendationService test suite", () => {
         scoreFilter: "gt",
       });
     });
+
+    it("sucess in get random lte", async () => {
+      jest.spyOn(Math, "random").mockReturnValueOnce(0.8);
+
+      jest
+        .spyOn(recommendationRepository, "findAll")
+        .mockResolvedValueOnce([recommendationFactory]);
+
+      await recommendationService.getRandom();
+      expect(recommendationRepository.findAll).toHaveBeenLastCalledWith({
+        score: 10,
+        scoreFilter: "lte",
+      });
+    });
   });
 
 });
