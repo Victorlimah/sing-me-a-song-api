@@ -1,6 +1,10 @@
 /* eslint-disable no-undef */
 /// <reference types="cypress" />
 
+beforeEach(() => {
+  cy.clearDatabase();
+});
+
 describe("Recommendations test suite", () => {
   it("should add a song recommendation", () => {
     cy.visit("http://localhost:3000/");
@@ -11,7 +15,7 @@ describe("Recommendations test suite", () => {
     cy.intercept("POST", "http://localhost:5000/recommendations").as("createRecommendation");
     cy.get("button").click();
 
-    cy.wait("@createRecommendation");
-    
+    cy.wait("@createRecommendation"); 
   });
+  
 });

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -23,3 +24,9 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("clearDatabase", () => {
+  cy.request("POST", "http://localhost:5000/tests/reset-database").then((res) =>
+    cy.log(res)
+  );
+});
