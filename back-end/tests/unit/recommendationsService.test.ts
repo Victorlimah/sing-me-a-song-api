@@ -160,4 +160,20 @@ describe("recommendationService test suite", () => {
     });
   });
 
+  describe("Random recommendations test suit", () => {
+    it("sucess in get random gt", async () => {
+      jest.spyOn(Math, "random").mockReturnValueOnce(0.5);
+
+      jest
+        .spyOn(recommendationRepository, "findAll")
+        .mockResolvedValueOnce([recommendationFactory]);
+
+      await recommendationService.getRandom();
+      expect(recommendationRepository.findAll).toHaveBeenLastCalledWith({
+        score: 10,
+        scoreFilter: "gt",
+      });
+    });
+  });
+
 });
