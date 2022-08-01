@@ -167,4 +167,25 @@ describe("Recommendations test suite", () => {
       });
     });
   });
+
+  describe("Top screen test suit", () => {
+    it("should load ten random song recommendations", () => {
+      const amount = 50;
+      const highScorePercentage = 70;
+      cy.seedDatabase(amount, highScorePercentage);
+
+      cy.intercept("GET", "/recommendations/top/10").as(
+        "getTopRecommendations"
+      );
+      cy.visit("http://localhost:3000/top");
+      cy.wait("@getTopRecommendations").then(({ response }) => {
+        cy.log(response);
+        expect(response.body.length).to.equal(10);
+        expect(response.body[0]).to.haveOwnProperty("name");
+        expect(response.body[0]).to.haveOwnProperty("youtubeLink");
+        expect(response.body[0]).to.haveOwnProperty("score");
+        expect(response.body[0].score).to.gte(response.body[9].score);
+      });
+    });
+  });
 });
